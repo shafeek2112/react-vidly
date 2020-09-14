@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactDom from 'react-dom';
 import { getMovies,deleteMovie } from '../services/fakeMovieService';
-
+import Like from './common/like';
 
 class Movies extends Component {
 
@@ -27,6 +27,25 @@ class Movies extends Component {
         return tableClass += this.state.movies.length === 0 ? ' d-none' : '';
     }
 
+    handleLike = (movie) => {
+
+        // const movies = this.state.movies.filter(movie => { 
+        //     if(movie.id === id)
+        //     {
+        //         movie.liked = (movie.liked === false) ? true : false;
+        //         return movies;
+        //     }
+        // });
+        
+        const movies = [...this.state.movies];
+        const index = this.state.movies.indexOf(movie);
+        movies[index] = {...movie};
+        console.log(movies[index].liked);
+        movies[index].liked = (movies[index].liked === false) ? true : false;
+        // console.log(movies[index].liked);
+        this.setState({ movies : movies});
+    }
+
     render() {
         return (
             <main className="container">
@@ -40,6 +59,7 @@ class Movies extends Component {
                             <th>Genre</th>
                             <th>Stock</th>
                             <th>Rate</th>
+                            <th>Like</th>
                             <th>Delete</th>
                         </tr>
                     </thead>
@@ -49,6 +69,7 @@ class Movies extends Component {
                                 <td> { movie.genre.name } </td>
                                 <td> { movie.numberInStock } </td>
                                 <td> { movie.dailyRentalRate } </td>
+                                <td> <Like onLike={() => { this.handleLike(movie) }} key={movie._id} id={movie._id} liked={movie.liked} /> </td>
                                 <td> <button type="button" onClick={ () => { this.handleDelete(movie._id) } } className="btn btn-danger">Delete</button> </td>
                             </tr>
                         ) }
