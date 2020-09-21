@@ -91,8 +91,7 @@ class Movies extends Component {
                         <div className="list-group">
 
                             <a  onClick={() => this.handleGenreChange(0)}  className={classNames} style={{"cursor":"pointer"}} >All Genres</a>
-                            {/* Below textProperty and valueProperty are just for making that ListGroup component more flexible. so we can use this for other pages/projects */}
-                            <ListGroup onItemSelect={this.handleGenreChange} items={genres} textProperty={"name"} valueProperty={"_id"} selectedProperty={selectedGenre} />
+                            <ListGroup onItemSelect={this.handleGenreChange} items={genres} selectedItem={selectedGenre} />
                         
                         </div>
                     </div>

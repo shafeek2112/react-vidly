@@ -2,11 +2,11 @@ import React from 'react';
 
 const ListGroup = (props) => {
 
-    const { items, textProperty, valueProperty, onItemSelect, selectedProperty } = props;
+    const { items, textProperty, valueProperty, onItemSelect, selectedItem } = props;
 
     const classNames = (val) => {
         let classNames = "list-group-item list-group-item-action ";
-        classNames += (selectedProperty === val) ? " active" : "";
+        classNames += (selectedItem === val) ? " active" : "";
         return classNames;
     }
 
@@ -18,6 +18,12 @@ const ListGroup = (props) => {
 
         // </div>
     );
+}
+
+ListGroup.defaultProps = {
+
+    'valueProperty' : '_id',
+    'textProperty' : 'name',
 }
 
 export default ListGroup;
