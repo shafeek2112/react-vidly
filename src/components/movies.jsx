@@ -20,13 +20,15 @@ class Movies extends Component {
     //Better place for AJAX call.
     componentDidMount() {
 
-        this.setState({ movies : getMovies(), genres : getGenres() })
+        //Add default All Genre into the array.\
+        const genres = [{'name' : 'All Genre', '_id' : 0},...getGenres()];
+        this.setState({ movies : getMovies(), genres })
     }
 
     handleDelete = (id) => {
 
-        deleteMovie(id);
-        this.setState({movies : getMovies()});
+        const movies = this.state.movies.filter(movie => (movie._id !== id));
+        this.setState({ movies }); 
     }
 
     showCount = () => {
@@ -64,18 +66,28 @@ class Movies extends Component {
         this.setState({currentPage : page});
     }
 
-    handleGenreChange = (genreId) => {
+    handleGenreChange = (genre) => {
 
-        let movies = getMovies();
-        if (genreId !== 0) movies = movies.filter(movie => (movie.genre._id === genreId));
-        this.setState({movies : movies, selectedGenre : genreId});
+        this.setState({selectedGenre : genre._id, currentPage : 1});
     }
+
+    /* filteredGenreMovies = (genreId = 0) => {
+
+        // let movies = getMovies();
+        let movies = this.state.movies;
+        // console.log(genreId)
+        if (genreId !== 0) movies = movies.filter(movie => (movie.genre._id === genreId));
+        this.setState({movies : movies});
+    } */
 
     render() {
 
         const { pageLimit, currentPage, movies:allMovies, genres, selectedGenre } = this.state;
 
-        const movies = paginate(allMovies,currentPage,pageLimit);
+        // Filter the movies using genre. Check whether the genre has id otherwise its All Genre.
+        const filteredMovies = (selectedGenre !== 0) ? allMovies.filter(movie => (movie.genre._id === selectedGenre)) : allMovies;
+
+        const movies = paginate(filteredMovies,currentPage,pageLimit);
 
         let classNames = "list-group-item list-group-item-action ";
         classNames += (selectedGenre === 0) ? " active" : "";
@@ -89,15 +101,13 @@ class Movies extends Component {
 
                     <div className="col-3">
                         <div className="list-group">
-
-                            <a  onClick={() => this.handleGenreChange(0)}  className={classNames} style={{"cursor":"pointer"}} >All Genres</a>
                             <ListGroup onItemSelect={this.handleGenreChange} items={genres} selectedItem={selectedGenre} />
-                        
                         </div>
                     </div>
 
                     <div className="col">
-                            <h4>{ this.showCount() }</h4>
+                            <h4>
+                                { filteredMovies.length === 0 ? "There are no movies to show :(" : "Showing "+ filteredMovies.length + ((filteredMovies.length === 1) ? " movie " : " movies ") + "in the database" }</h4>
                             <table className={ this.getTableClass() }>
                             <thead className="thead-dark">
                                 <tr>
@@ -123,7 +133,7 @@ class Movies extends Component {
                         </table>
 
                         {/* Pagination Component */}
-                        <Pagination totalCount={ this.state.movies.length } pageSize={ pageLimit } currentPage={ currentPage } onPageChange={this.handlePageChange} />
+                        <Pagination totalCount={ filteredMovies.length } pageSize={ pageLimit } currentPage={ currentPage } onPageChange={this.handlePageChange} />
                     </div>
                 </div>
 

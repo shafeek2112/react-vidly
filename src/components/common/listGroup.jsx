@@ -14,7 +14,7 @@ const ListGroup = (props) => {
         // <div className="list-group">
         //     <a  onClick={() => onItemSelect(0)}  className="list-group-item list-group-item-action active" style={{"cursor":"pointer"}} >All Genres</a>
 
-            items.map( item => (<a key={item[valueProperty]} onClick={() => onItemSelect(item[valueProperty])} className={classNames(item[valueProperty])} style={{"cursor":"pointer"}}>{item[textProperty]}</a> ))
+            items.map( item => (<a key={item[valueProperty]} onClick={() => onItemSelect(item)} className={classNames(item[valueProperty])} style={{"cursor":"pointer"}}>{item[textProperty]}</a> ))
 
         // </div>
     );
