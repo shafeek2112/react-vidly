@@ -3,16 +3,16 @@ import Like from './common/like';
 
 const MoviesTable = (props) => {
 
-    const { movies, onDelete, onLike } = props;
+    const { movies, onDelete, onLike, onSort } = props;
 
     return (
         <table className={ movies.length === 0 ? 'table d-none' : 'table' }>
             <thead className="thead-dark">
                 <tr>
-                    <th>Title</th>
-                    <th>Genre</th>
-                    <th>Stock</th>
-                    <th>Rate</th>
+                    <th onClick={() => { onSort('title')} }>Title</th>
+                    <th onClick={() => { onSort('genre.name')} }>Genre</th>
+                    <th onClick={() => { onSort('numberInStock')} }>Stock</th>
+                    <th onClick={() => { onSort('dailyRentalRate')} }>Rate</th>
                     <th>Like</th>
                     <th>Delete</th>
                 </tr>
