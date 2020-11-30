@@ -1,40 +1,31 @@
 import React, { Component } from 'react';
 import Like from './common/like';
-
+import TableHeader from './common/tableHeader';
 
 class MoviesTable extends Component {
 
-    onRaiseSort = (path) => {
-
-        const sortColumn = {...this.props.sortColumn};
-
-        if(sortColumn.path === path) {
-            sortColumn.order = (sortColumn.order === 'asc') ? 'desc' : 'asc';
-        }
-        else {
-            sortColumn.path = path;
-            sortColumn.order = 'asc'
-        }
-
-        this.props.onSort(sortColumn);
-    }
+    movieHeaderColumns = [
+        { 'path' : 'title', 'label' : 'Title'},
+        { 'path' : 'genre.name', 'label' : 'Genre'},
+        { 'path' : 'numberInStock', 'label' : 'Stock'},
+        { 'path' : 'dailyRentalRate', 'label' : 'Rate'},
+        { 'path' : '','label' : 'Like'},
+        { 'path' : '','label' : 'Delete'},
+    ];
 
     render() {
 
-        const { movies, onDelete, onLike } = this.props;
+        const { sortColumn, movies, onDelete, onLike, onSort } = this.props;
 
         return (
             <table className={ movies.length === 0 ? 'table d-none' : 'table' }>
-                <thead className="thead-dark">
-                    <tr>
-                        <th onClick={() => { this.onRaiseSort('title')} }>Title</th>
-                        <th onClick={() => { this.onRaiseSort('genre.name')} }>Genre</th>
-                        <th onClick={() => { this.onRaiseSort('numberInStock')} }>Stock</th>
-                        <th onClick={() => { this.onRaiseSort('dailyRentalRate')} }>Rate</th>
-                        <th>Like</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
+                
+                <TableHeader 
+                    tableHeaderColumns={this.movieHeaderColumns} 
+                    sortColumn={ sortColumn } 
+                    onSort={onSort} 
+                />
+
                 <tbody>
                     { movies.map(movie => <tr key={movie._id}>
                             <td> { movie.title } </td>
