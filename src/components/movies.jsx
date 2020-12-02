@@ -16,7 +16,7 @@ class Movies extends Component {
         pageLimit: 4,
         currentPage : 1,
         selectedGenre : 0,
-        sortColumn : {'path' : 'title', 'order' : 'asc'}
+        sortColumn : {'path' : 'title', 'order' : 'asc', 'icon' : 'down'}
     }
 
     //Better place for AJAX call.
