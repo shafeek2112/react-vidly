@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Like from './common/like';
 import TableHeader from './common/tableHeader';
+import TableBody from './common/tableBody';
 
 class MoviesTable extends Component {
 
@@ -9,8 +10,20 @@ class MoviesTable extends Component {
         { 'path' : 'genre.name', 'label' : 'Genre'},
         { 'path' : 'numberInStock', 'label' : 'Stock'},
         { 'path' : 'dailyRentalRate', 'label' : 'Rate'},
-        { 'path' : '','label' : 'Like'},
-        { 'path' : '','label' : 'Delete'},
+        { 
+            'path' : '',
+            'label' : 'Like', 
+            // to avoid 'movie' undefined error, make this content as function and pass the movie as argument. So in the TableBody component, need to 
+            // call this content as a function.
+            'content' : (movie) => <Like onLike={() => { this.props.onLike(movie) }} key={movie._id} id={movie._id} liked={movie.liked} />
+        },
+        { 
+            'path' : '',
+            'label' : 'Delete',
+            // to avoid 'movie' undefined error, make this content as function and pass the movie as argument. So in the TableBody component, need to 
+            // call this content as a function.
+            'content' : (movie) => <button type="button" onClick={ () => { this.props.onDelete(movie._id) } } className="btn btn-danger">Delete</button>
+        },
     ];
 
     render() {
@@ -26,7 +39,12 @@ class MoviesTable extends Component {
                     onSort={onSort} 
                 />
 
-                <tbody>
+                <TableBody 
+                    items={movies}
+                    columns={this.movieHeaderColumns}
+                />
+
+                {/* <tbody>
                     { movies.map(movie => <tr key={movie._id}>
                             <td> { movie.title } </td>
                             <td> { movie.genre.name } </td>
@@ -36,7 +54,7 @@ class MoviesTable extends Component {
                             <td> <button type="button" onClick={ () => { onDelete(movie._id) } } className="btn btn-danger">Delete</button> </td>
                         </tr>
                     ) }
-                </tbody>
+                </tbody> */}
             </table>
         );
     };
