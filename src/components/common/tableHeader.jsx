@@ -11,21 +11,25 @@ class TableHeader extends Component {
 
         if(sortColumn.path === path) {
             sortColumn.order = (sortColumn.order === 'asc') ? 'desc' : 'asc';
-            sortColumn.icon = (sortColumn.order === 'asc') ? 'down' : 'up';
         }
         else {
             sortColumn.path = path;
             sortColumn.order = 'asc'
-            sortColumn.icon = 'down';
         }
 
         this.props.onSort(sortColumn);
     }
 
-    addIconClass = (path) => {
+    renderSortIcon = (path) => {
 
         const { sortColumn } = this.props;
-        return 'ml-2 fa fa-angle-double-'+((sortColumn.path === path) ? sortColumn.icon : 'down');
+
+        //If the path is empty for Like n delete column and column is not currently sorting then return.
+        if(!path || sortColumn.path !== path) return;
+
+        if(sortColumn.order === 'asc') return <i className='fa fa-sort-asc'></i> 
+
+        return <i className='fa fa-sort-desc'></i> 
     }
 
     render() {
@@ -35,11 +39,9 @@ class TableHeader extends Component {
         return (
             <thead className="thead-dark">
                 <tr>
-                    { tableHeaderColumns.map(column => <th key={column.label} onClick={() => { this.onRaiseSort(column.path)} }>
-                            {column.label}
-                            {
-                               (column.path) ? <i className={this.addIconClass(column.path)}></i> : ''
-                            }
+                    { tableHeaderColumns.map(column => 
+                        <th className={ (column.path) ? "clickable" : ''} key={column.label} onClick={() => { this.onRaiseSort(column.path)} }>
+                            {column.label} {this.renderSortIcon(column.path)}
                         </th>) 
                     }
                 </tr>
