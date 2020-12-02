@@ -64,19 +64,25 @@ class Movies extends Component {
         this.setState({ sortColumn });
     }
 
-    render() {
+    getPagedData = () => {
 
-        const { pageLimit, currentPage, movies:allMovies, genres, selectedGenre, sortColumn } = this.state;
+        const { pageLimit, currentPage, movies: allMovies, selectedGenre, sortColumn } = this.state;
 
         // Filter the movies using genre. Check whether the genre has id otherwise its All Genre.
         const filteredMovies = (selectedGenre !== 0) ? allMovies.filter(movie => (movie.genre._id === selectedGenre)) : allMovies;
-
         const sorted = _.orderBy(filteredMovies, [sortColumn.path], [sortColumn.order]);
-
         const movies = paginate(sorted,currentPage,pageLimit);
+        return { totalCount : filteredMovies.length, movies : movies};
+    }
 
+    render() {
+
+        const { pageLimit, currentPage, genres, selectedGenre, sortColumn } = this.state;
+       
         let classNames = "list-group-item list-group-item-action ";
         classNames += (selectedGenre === 0) ? " active" : "";
+
+        const { totalCount, movies} = this.getPagedData();
 
         return (
             <main className="container">
@@ -93,13 +99,13 @@ class Movies extends Component {
                     </div>
 
                     <div className="col">
-                        <h4>{ filteredMovies.length === 0 ? "There are no movies to show :(" : "Showing "+ filteredMovies.length + ((filteredMovies.length === 1) ? " movie " : " movies ") + "in the database" }</h4>
+                        <h4>{ totalCount === 0 ? "There are no movies to show :(" : "Showing "+ totalCount + ((totalCount === 1) ? " movie " : " movies ") + "in the database" }</h4>
 
                         {/* MoviesTable Component */}
                         <MoviesTable movies={movies} sortColumn={sortColumn} onSort={this.handleSort} onDelete={this.handleDelete} onLike={this.handleLike} />
 
                         {/* Pagination Component */}
-                        <Pagination totalCount={ filteredMovies.length } pageSize={ pageLimit } currentPage={ currentPage } onPageChange={this.handlePageChange} />
+                        <Pagination totalCount={ totalCount } pageSize={ pageLimit } currentPage={ currentPage } onPageChange={this.handlePageChange} />
                     </div>
                 </div>
 
